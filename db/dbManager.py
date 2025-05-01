@@ -27,6 +27,7 @@ class baseDbManager(ABC):
         Execute query method needed for each CRUD operation
         """
         try:
+            print(f"Executing query: {query}")
             connection = self._connect()
             curs = connection.cursor()
             curs.execute(query, *args)
