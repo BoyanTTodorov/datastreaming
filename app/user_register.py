@@ -3,7 +3,8 @@
 import ttkbootstrap as ttk
 from ttkbootstrap.constants import *
 from input_generator import inputGenerator
-from ..db.dbManager import dbManager
+from dbManager import dbManager
+
 
 
 class App(ttk.Window):
@@ -47,13 +48,12 @@ class App(ttk.Window):
 
         if not badgenum.isnumeric():
             self.label.config(text="Userbadge need to be numeric")
-            self.badgenum.bootstyle="error"
         elif email.count('@') == 0:
             self.label.config(text="Email is not correct")
-            self.email.bootstyle="error"
         else:
-            dbmanager = dbManager()
-            
+            path = r"user"
+            dbmanager = dbManager(path)
+            dbmanager.create(f"INSERT INTO user (badgenumber, username, email) VALUES(?,?,?)", [badgenum, username, email])
 
     def on_btn_generate_user_click(self):
         new_user = inputGenerator()
@@ -73,8 +73,6 @@ class App(ttk.Window):
         self.badgenum.insert(0, badge)
         self.username.insert(0, name)
         self.email.insert(0, email)
-
-        
 
 # Instantiate the App class
 app = App()

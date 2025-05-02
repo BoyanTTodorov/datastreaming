@@ -1,5 +1,5 @@
 from datetime import datetime
-from ..db.dbManager import dbManager
+from .dbManager import dbManager
 
 class Clocking(dbManager):
     def __init__(self, dbname):

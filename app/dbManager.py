@@ -30,7 +30,7 @@ class baseDbManager(ABC):
             print(f"Executing query: {query}")
             connection = self._connect()
             curs = connection.cursor()
-            curs.execute(query, *args)
+            curs.execute(query, *args, commit)
             if commit:
                 connection.commit()
             result = curs.fetchall()
