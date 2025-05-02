@@ -2,8 +2,9 @@
 # Using ttkbootstrap for not 80'sh tkinter look
 import ttkbootstrap as ttk
 from ttkbootstrap.constants import *
-import numpy as np
-from string import ascii_lowercase
+from input_generator import inputGenerator
+from ..db.dbManager import dbManager
+
 
 class App(ttk.Window):
     def __init__(self, themename="darkly"):
@@ -12,7 +13,9 @@ class App(ttk.Window):
         self.create_widgets()
 
     def create_widgets(self):
-
+        """
+        Creating UI elements and assign function
+        """
         self.title("Insert User into the Database")
         
         self.label = ttk.Label(self, text="", bootstyle="info")
@@ -30,10 +33,13 @@ class App(ttk.Window):
         self.email.insert(0, "email@mail.com")
         self.email.pack()
 
-        self.button = ttk.Button(self, text="Click Me", bootstyle="success", command=self.on_button_click)
-        self.button.pack(pady=20)
+        self.btn_register = ttk.Button(self, text="Click Me", bootstyle="success", command=self.on_btn_register_click)
+        self.btn_register.pack(pady=20)
 
-    def on_button_click(self):
+        self.btn_generate_user = ttk.Button(self, text="GenerateUser",bootstyle="", command=self.on_btn_generate_user_click)
+        self.btn_generate_user.pack()
+        
+    def on_btn_register_click(self):
         #self.label.config(text="")
         badgenum = self.badgenum.get().strip()
         username = self.username.get().strip()
@@ -46,7 +52,29 @@ class App(ttk.Window):
             self.label.config(text="Email is not correct")
             self.email.bootstyle="error"
         else:
-            pass # Query will go here
+            dbmanager = dbManager()
+            
+
+    def on_btn_generate_user_click(self):
+        new_user = inputGenerator()
+        # Debug prints to check the generated values
+        print("Generating new user...")
+        badge = new_user.generate_badge()
+        name = new_user.generate_name()
+        email = new_user.generate_email()
+        print(f"Badge: {badge}, Name: {name}, Email: {email}")
+        
+        # Clear the existing content in the input fields
+        self.badgenum.delete(0, 'end')
+        self.username.delete(0, 'end')
+        self.email.delete(0, 'end')
+        
+        # Insert the new values
+        self.badgenum.insert(0, badge)
+        self.username.insert(0, name)
+        self.email.insert(0, email)
+
+        
 
 # Instantiate the App class
 app = App()
@@ -54,15 +82,3 @@ app = App()
 # Run the application
 app.mainloop()
 
-class inputGenerator:
-    def __init__(self, seed):
-        self.randomseed = seed
-
-    def generate_badge(self):
-        return np.random.randint(1000, 10000, 1)
-        
-    def generate_name(self):
-        return np.random.choice(1, np.random.randint(5,10,1), list(ascii_lowercase))
-    
-inp = inputGenerator(5)
-print(inp.generate_name())
