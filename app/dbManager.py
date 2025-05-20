@@ -22,7 +22,7 @@ class baseDbManager(ABC):
         """
         return sqlite3.connect(self.dbname)
     
-    def _execute_query(self, query, *args, commit=False):
+    def _execute_query(self, query, params, commit=False):
         """
         Execute query method needed for each CRUD operation
         """
@@ -30,7 +30,7 @@ class baseDbManager(ABC):
             print(f"Executing query: {query}")
             connection = self._connect()
             curs = connection.cursor()
-            curs.execute(query, *args, commit)
+            curs.execute(query, params)
             if commit:
                 connection.commit()
             result = curs.fetchall()
@@ -41,36 +41,36 @@ class baseDbManager(ABC):
 
     # Base CRUD methods
     @abstractmethod
-    def create(self, query, *args, **kwargs):
+    def create(self, query, *args):
         pass
 
     @abstractmethod
-    def read(self, query, *args, **kwargs):
+    def read(self, query, *args):
         pass 
 
     @abstractmethod
-    def update(self, query, *args, **kwargs):
+    def update(self, query, *args):
         pass
 
     @abstractmethod
-    def delete(self, query, *args, **kwargs):
+    def delete(self, query, *args):
         pass
 
 # dbManager class that inherits from baseDbManager
 class dbManager(baseDbManager):
     # Initializing the class
-    def __init__(self, dbname=None, *args, **kwargs):
+    def __init__(self, dbname=None, *args):
         # Initialize superclass
-        super().__init__(dbname, *args, **kwargs)
+        super().__init__(dbname, *args)
     # Base CRUD operations using base _execute_query method
-    def create(self, query, *args, **kwargs):
-        return self._execute_query(query, *args, commit=True)
+    def create(self, query, *args):
+        return self._execute_query(query, args, commit=True)
 
-    def read(self, query, *args, **kwargs):
-        return self._execute_query(query, *args)
+    def read(self, query, *args):
+        return self._execute_query(query, args)
 
-    def update(self, query, *args, **kwargs):
-        return self._execute_query(query, *args, commit=True)
+    def update(self, query, *args):
+        return self._execute_query(query, args, commit=True)
 
-    def delete(self, query, *args, **kwargs):
-        return self._execute_query(query, *args, commit=True)
+    def delete(self, query, *args):
+        return self._execute_query(query, args, commit=True)

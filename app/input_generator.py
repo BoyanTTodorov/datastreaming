@@ -15,8 +15,14 @@ class inputGenerator:
     def generate_email(self):
         name = self.generate_name()
         return f"{name}@email.com"
-
+    
+    def generate_payrate(self):
+        payrate = np.random.randint(12,24,1)[0]
+        return payrate
+    
 inp = inputGenerator(5)
+
 print(inp.generate_badge())
 print(inp.generate_name())
 print(inp.generate_email())
+print(inp.generate_payrate())

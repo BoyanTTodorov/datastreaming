@@ -34,6 +34,10 @@ class App(ttk.Window):
         self.email.insert(0, "email@mail.com")
         self.email.pack()
 
+        self.payrate = ttk.Entry(self, bootstyle="info")
+        self.payrate.insert(0, 10)
+        self.payrate.pack()
+
         self.btn_register = ttk.Button(self, text="Click Me", bootstyle="success", command=self.on_btn_register_click)
         self.btn_register.pack(pady=20)
 
@@ -45,6 +49,8 @@ class App(ttk.Window):
         badgenum = self.badgenum.get().strip()
         username = self.username.get().strip()
         email = self.email.get().strip()
+        payrate = self.payrate.get().strip()
+
 
         if not badgenum.isnumeric():
             self.label.config(text="Userbadge need to be numeric")
@@ -53,7 +59,7 @@ class App(ttk.Window):
         else:
             path = r"user"
             dbmanager = dbManager(path)
-            dbmanager.create(f"INSERT INTO user (badgenumber, username, email) VALUES(?,?,?)", [badgenum, username, email])
+            dbmanager.create("INSERT INTO user (badgenumber, username, email, payrate) VALUES(?, ?, ?, ?)", badgenum, username, email, payrate)
 
     def on_btn_generate_user_click(self):
         new_user = inputGenerator()
@@ -62,18 +68,20 @@ class App(ttk.Window):
         badge = new_user.generate_badge()
         name = new_user.generate_name()
         email = new_user.generate_email()
-        print(f"Badge: {badge}, Name: {name}, Email: {email}")
+        payrate = new_user.generate_payrate()
+        
+        print(f"Badge: {badge}, Name: {name}, Email: {email}, Payrate: {payrate}")
         
         # Clear the existing content in the input fields
         self.badgenum.delete(0, 'end')
         self.username.delete(0, 'end')
         self.email.delete(0, 'end')
-        
+        self.payrate.delete(0, 'end')
         # Insert the new values
         self.badgenum.insert(0, badge)
         self.username.insert(0, name)
         self.email.insert(0, email)
-
+        self.payrate.insert(0, payrate)
 # Instantiate the App class
 app = App()
 
